@@ -10,10 +10,20 @@ class Point:
     color = 'Red'
     circle = 2
 
-    def set_coords(self, x, y):
-        print('set_coords method call')
+    # def set_coords(self, x, y):
+    #     print('set_coords method call')
+    #     self.x = x
+    #     self.y = y
+
+    # Initializer
+    def __init__(self, x=0, y=0):
+        print('__init__ callback')
         self.x = x
         self.y = y
+
+    # Finalizer
+    def __del__(self):
+        print('Deleting instance: ' + str(self))
 
     def get_coords(self):
         return (self.x, self.y)
@@ -73,19 +83,19 @@ b.y = 20
 
 pt = Point()
 print(type(pt)) # <class '__main__.Point'>
-print(type(pt.set_coords)) # <class 'method'>, but it isn't method call
+# print(type(pt.set_coords)) # <class 'method'>, but it isn't method call
 
 # pt.set_coords() # Don't work if there is no 'self' parameter in set_coords() method
 # Point.set_coords() # Work if there is no 'self' parameter in set_coords() method
 
 # pt.set_coords() # Work if there is 'self' parameter in set_coords() method
 
-pt.set_coords(1, 2)
-print(pt.__dict__)
+# pt.set_coords(1, 2)
+# print(pt.__dict__)
 
-pt2 = Point()
-pt2.set_coords(10, 20)
-print(pt2.__dict__)
+# pt2 = Point()
+# pt2.set_coords(10, 20)
+# print(pt2.__dict__)
 
 # !!! 'self' parameter allows us to work with a specific instance of class
 
@@ -98,3 +108,11 @@ print(res) # link to object-function: >>> <bound method Point.get_coords of <__m
 print(res())
 # but this way is uncommon, so usually we should use point-call (.get_coords())
 
+# __________________________________________________________________
+# Lesson 3
+# Initializer __init__ and finalizer __del__
+
+# Rewrite class method set_coords() with '__init__' magic method in the begining of this file.
+
+pt = Point(1, 2)
+print(pt.__dict__)
