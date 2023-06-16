@@ -10,6 +10,14 @@ class Point:
     color = 'Red'
     circle = 2
 
+    def set_coords(self, x, y):
+        print('set_coords method call')
+        self.x = x
+        self.y = y
+
+    def get_coords(self):
+        return (self.x, self.y)
+
 
 Point.color = 'Black'
 Point.circle = 1
@@ -54,6 +62,39 @@ a.y = 2
 b.x = 10
 b.y = 20
 
-print(Point.__doc__)
+# print(Point.__doc__)
 # __________________________________________________________________
+
+# Lesson 2
+# Class methods.
+# Parameter "self"
+
+# Adding "set_coords" into Point class in Lesson 1
+
+pt = Point()
+print(type(pt)) # <class '__main__.Point'>
+print(type(pt.set_coords)) # <class 'method'>, but it isn't method call
+
+# pt.set_coords() # Don't work if there is no 'self' parameter in set_coords() method
+# Point.set_coords() # Work if there is no 'self' parameter in set_coords() method
+
+# pt.set_coords() # Work if there is 'self' parameter in set_coords() method
+
+pt.set_coords(1, 2)
+print(pt.__dict__)
+
+pt2 = Point()
+pt2.set_coords(10, 20)
+print(pt2.__dict__)
+
+# !!! 'self' parameter allows us to work with a specific instance of class
+
+# Adding "get_coords" into Point class in Lesson 1
+print(pt.get_coords())
+
+# So... As method name is a class attribute we can do something like:
+res = getattr(pt, 'get_coords')
+print(res) # link to object-function: >>> <bound method Point.get_coords of <__main__.Point object at 0x1286ddf10>>
+print(res())
+# but this way is uncommon, so usually we should use point-call (.get_coords())
 
