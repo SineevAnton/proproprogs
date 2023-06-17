@@ -15,6 +15,10 @@ class Point:
     #     self.x = x
     #     self.y = y
 
+    def __new__(cls, *args, **kwargs): # cls is a link to current class
+        print('Callback __new__ method for ' + str(cls))
+        return super().__new__(cls)
+
     # Initializer
     def __init__(self, x=0, y=0):
         print('__init__ callback')
@@ -37,7 +41,7 @@ b = Point()
 # print(a.__dict__)
 # print(b.color)
 
-a.color = 'Green'
+# a.color = 'Green'
 # print(a.__dict__)
 
 # Class and its instance have their own namespaces!!!
@@ -67,10 +71,10 @@ delattr(Point, 'type_pt')
 # But we can:
 # del a.color
 
-a.x = 1
-a.y = 2
-b.x = 10
-b.y = 20
+# a.x = 1
+# a.y = 2
+# b.x = 10
+# b.y = 20
 
 # print(Point.__doc__)
 # __________________________________________________________________
@@ -81,8 +85,8 @@ b.y = 20
 
 # Adding "set_coords" into Point class in Lesson 1
 
-pt = Point()
-print(type(pt)) # <class '__main__.Point'>
+# pt = Point()
+# print(type(pt)) # <class '__main__.Point'>
 # print(type(pt.set_coords)) # <class 'method'>, but it isn't method call
 
 # pt.set_coords() # Don't work if there is no 'self' parameter in set_coords() method
@@ -100,13 +104,14 @@ print(type(pt)) # <class '__main__.Point'>
 # !!! 'self' parameter allows us to work with a specific instance of class
 
 # Adding "get_coords" into Point class in Lesson 1
-print(pt.get_coords())
+# print(pt.get_coords())
 
 # So... As method name is a class attribute we can do something like:
-res = getattr(pt, 'get_coords')
-print(res) # link to object-function: >>> <bound method Point.get_coords of <__main__.Point object at 0x1286ddf10>>
-print(res())
+# res = getattr(pt, 'get_coords')
+# print(res) # link to object-function: >>> <bound method Point.get_coords of <__main__.Point object at 0x1286ddf10>>
+# print(res())
 # but this way is uncommon, so usually we should use point-call (.get_coords())
+
 
 # __________________________________________________________________
 # Lesson 3
@@ -114,5 +119,60 @@ print(res())
 
 # Rewrite class method set_coords() with '__init__' magic method in the begining of this file.
 
+# pt = Point(1, 2)
+# print(pt.__dict__)
+
+# Add finalizer __del__ to class.
+# Garbage collector delete instances, cause there aren't any external links on them.
+
+
+# __________________________________________________________________
+# Lesson 4
+# Magic method __new__.
+# Singleton pattern example.
+
+# Adding __new__ magic method to our class
+
 pt = Point(1, 2)
-print(pt.__dict__)
+print(pt)
+
+# About Singleton
+
+
+class DataBase:
+
+    __instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if cls.__instance is None:
+            cls.__instance = super().__new__(cls)
+
+        return cls.__instance
+
+    def __init__(self, user, psw, port):
+        self.user = user
+        self.psw = psw
+        self.port = port
+
+    def __del__(self):
+        print('deleting instance ' + str(self))
+
+    def connect(self):
+        print(f'Connecting to DataBase: {self.user}, {self.psw}, {self.port}.')
+
+    def close(self):
+        print('Closing DB connection.')
+
+    def read(self):
+        return "DB data"
+
+    def write(self, data):
+        print(f"Writing to DB: {data}")
+
+
+db = DataBase('root', '1234', 80)
+db2 = DataBase('root2', '5678', 40)
+print(id(db), id(db2))
+
+db.connect()
+db2.connect()
